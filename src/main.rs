@@ -1,4 +1,8 @@
-#![allow(unused)] // For beginning only
+#![allow(unused)]
+
+mod api;
+
+// For beginning only
 //
 use axum::{
     response::Html,
@@ -7,49 +11,25 @@ use axum::{
     Json,
     Router,
 };
-
+use api::api::{NameRequest, NameResponse, test_handler, name_handler};
 use tokio::net::TcpListener;
 use std::net::SocketAddr;
+use futures::executor::block_on;
+use sea_orm::{Database, DbErr};
+const DATABASE_URL: &str = "postgresql://rolanveroncruz:@localhost:5432/dnc";
+const DB_NAME: &str = "dnc_backend";
+async fn run() -> Result<(), DbErr> {
+    let db = Database::connect(DATABASE_URL).await?;
 
-use serde::{
-    Deserialize, 
-    Serialize,
-};
-
-// ---- Data Structures ----
-#[derive(Deserialize, Serialize)]
-   struct NameRequest{
-    first_name: String,
-    last_name: String,
-   }
-#[derive(Deserialize, Serialize)]
-    struct NameResponse{
-     full_name: String,
-    }
-#[derive(Deserialize, Serialize)]
-    struct TestResponse{
-     message: String,
-    }
-
-// ---- Handlers ----
-async fn test_handler() ->Json<TestResponse> {
-    let response = TestResponse {
-        message: "Hello, World!".to_string(),
-    };
-    Json(response)
-
+    Ok(())
 }
-async fn name_handler(
-    Json(payload): Json<NameRequest>,) -> Json<NameResponse> {
-    let full_name = format!("{} {}", payload.first_name, payload.last_name);
-    let resonse = NameResponse { full_name };
-    Json(resonse)
-}
-
-
 
 #[tokio::main]
 async fn main() {
+    if let Err(err) = block_on(run()) {
+        panic!("{}", err);
+    }
+    println!("Connected to database");
     // Build our application with a single route
     let app = Router::new()
         .route("/", get(|| async { "Welcome to the Axum server!" }))

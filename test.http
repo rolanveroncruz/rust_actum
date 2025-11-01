@@ -1,0 +1,11 @@
+### GET request to example server
+GET http://localhost:3000/
+
+### GET request to example server
+GET http://localhost:3000/test
+
+### GET request to example server
+POST http://localhost:3000/name
+Content-Type: application/json
+
+{"first_name":"Rolan", "last_name": "VC"}

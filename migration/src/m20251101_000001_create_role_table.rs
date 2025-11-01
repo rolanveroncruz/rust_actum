@@ -1,0 +1,39 @@
+// m20251101_000001_create_role_table.rs
+use sea_orm_migration::{prelude::*, schema::*};
+#[derive(DeriveMigrationName)]
+pub struct Migration;
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        // Replace the sample below with your own migrationxxxx scripts
+
+        manager
+            .create_table(
+                Table::create()
+                    .table(Role::Table)
+                    .if_not_exists()
+                    .col(pk_auto(Role::Id))
+                    .col(string(Role::Name))
+                    .col(string(Role::Desc))
+                    .to_owned(),
+            )
+            .await
+    }
+
+    async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        // Replace the sample below with your own migrationxxxx scripts
+
+        manager
+            .drop_table(Table::drop().table(Role::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(DeriveIden)]
+pub enum Role{
+    Table,
+    Id,
+    Name,
+    Desc,
+}
