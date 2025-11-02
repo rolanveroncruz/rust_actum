@@ -12,17 +12,17 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(User::Table)
+                    .table(DNCUser::Table)
                     .if_not_exists()
-                    .col(pk_auto(User::Id))
-                    .col(string(User::Email).not_null().unique_key())
-                    .col(string(User::Password).not_null())
-                    .col(string(User::Name))
-                    .col(ColumnDef::new(User::Role).integer().not_null().default(1))
+                    .col(pk_auto(DNCUser::Id))
+                    .col(string(DNCUser::Email).not_null().unique_key())
+                    .col(string(DNCUser::Password).not_null())
+                    .col(string(DNCUser::Name))
+                    .col(ColumnDef::new(DNCUser::Role).integer().not_null().default(1))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_user_role")
-                            .from(User::Table, User::Role)
+                            .from(DNCUser::Table, DNCUser::Role)
                             .to(Role::Table, Role::Id)
                             .on_delete(ForeignKeyAction::NoAction)
                             .on_update(ForeignKeyAction::NoAction),
@@ -37,13 +37,13 @@ impl MigrationTrait for Migration {
         // Replace the sample below with your own migrationxxxx scripts
 
         manager
-            .drop_table(Table::drop().table(User::Table).to_owned())
+            .drop_table(Table::drop().table(DNCUser::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-pub enum User{
+pub enum DNCUser{
     Table,
     Id,
     Email,

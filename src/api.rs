@@ -14,7 +14,7 @@ pub mod api {
     }
     #[derive(Deserialize, Serialize)]
     pub struct TestResponse{
-        message: String,
+        pub message: String,
     }
 
     pub async fn name_handler(
